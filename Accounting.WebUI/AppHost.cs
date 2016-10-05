@@ -48,7 +48,7 @@ namespace Accounting.WebUI
             var modules = new List<NinjectModule>
             {
                 new OrmLiteModule(ConfigurationManager.ConnectionStrings["AccountingDb"].ConnectionString,
-                    (Language)Enum.Parse(typeof(Language), ConfigurationManager.AppSettings["Locale"]));
+                    (Language)Enum.Parse(typeof(Language), ConfigurationManager.AppSettings["Locale"]))
             };
 
             var kernel = new StandardKernel(modules.ToArray());

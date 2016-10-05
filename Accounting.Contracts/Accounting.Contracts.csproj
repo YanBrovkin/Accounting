@@ -40,9 +40,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO\References\Buyer.cs" />
+    <Compile Include="DTO\Document.cs" />
+    <Compile Include="DTO\DocumentJournal.cs" />
+    <Compile Include="DTO\DocumentSale.cs" />
+    <Compile Include="DTO\References\Producer.cs" />
+    <Compile Include="DTO\References\SKU.cs" />
+    <Compile Include="DTO\References\SKUGroup.cs" />
     <Compile Include="IRead.cs" />
     <Compile Include="Language.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DTO\Documents\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
