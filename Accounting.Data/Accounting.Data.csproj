@@ -83,6 +83,7 @@
     <Compile Include="NinjectIocAdapter.cs" />
     <Compile Include="OrmLiteModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="References\SKU\SKUReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

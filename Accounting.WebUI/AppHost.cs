@@ -1,18 +1,8 @@
 ﻿using ServiceStack.WebHost.Endpoints;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Reflection;
 using Funq;
-using ServiceStack;
-using ServiceStack.Configuration;
-using ServiceStack.FluentValidation;
-using ServiceStack.MiniProfiler;
-using ServiceStack.MiniProfiler.Data;
-using ServiceStack.Mvc;
-using ServiceStack.OrmLite;
-using System.Web.Mvc;
 using ServiceStack.Text;
 using System.Globalization;
 using Ninject;
@@ -50,6 +40,11 @@ namespace Accounting.WebUI
                 new OrmLiteModule(ConfigurationManager.ConnectionStrings["AccountingDb"].ConnectionString,
                     (Language)Enum.Parse(typeof(Language), ConfigurationManager.AppSettings["Locale"]))
             };
+
+            //SetConfig(new EndpointHostConfig
+            //{
+            //    ServiceStackHandlerFactoryPath = "services",
+            //});
 
             var kernel = new StandardKernel(modules.ToArray());
 

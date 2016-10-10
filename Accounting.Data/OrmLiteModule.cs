@@ -1,4 +1,5 @@
 ﻿using Accounting.Contracts;
+using Ninject;
 using Ninject.Modules;
 using ServiceStack.OrmLite;
 using ServiceStack.OrmLite.SqlServer;
@@ -6,9 +7,9 @@ using System;
 using ServiceStack.MiniProfiler;
 using ServiceStack.MiniProfiler.Data;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Accounting.Contracts.References;
+using Accounting.Contracts.DTO;
+using Accounting.Data.References;
 
 namespace Accounting.Data
 {
@@ -42,7 +43,9 @@ namespace Accounting.Data
                 return dbFactory;
             });
 
+            // Readers
             //Kernel.Bind<ISnapshotsReader>().To<SnapshotsReader>();
+            Kernel.Bind<IRead<GetSKUSpecification, List<SKU>>>().To<SKUReader>();
         }
     }
 }

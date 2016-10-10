@@ -82,6 +82,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Accounting.Contracts\Accounting.Contracts.csproj">
+      <Project>{CDA8815C-06FA-466B-BDC9-92DA2676D256}</Project>
+      <Name>Accounting.Contracts</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

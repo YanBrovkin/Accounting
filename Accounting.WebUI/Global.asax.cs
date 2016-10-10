@@ -16,9 +16,21 @@ namespace Accounting.WebUI
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             new AppHost(@"Accounting Host started", typeof(SKUService).Assembly).Init();
+        }
+
+        public override void Init()
+        {
+            base.Init();
+            BeginRequest += OnBeginRequest;
+        }
+
+        private void OnBeginRequest(object sender, EventArgs e)
+        {
+            var path = Request.Url.AbsolutePath;
+            // http://stackoverflow.com/questions/1149750/using-asp-net-routing-to-serve-static-files
+            //if(!path.StartsWith('api/'))
         }
     }
 }
