@@ -1,10 +1,13 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DAL.ReadModels
+namespace DAL.DTO
 {
-    public class PriceReadModel
+    [Table("refPrice", Schema = "dbo")]
+    public class PriceDto
     {
-        public Guid Id { get; set; }
+        public long Id { get; set; }
+        public String Title { get; set; }
         public decimal Value { get; set; }
     }
 }

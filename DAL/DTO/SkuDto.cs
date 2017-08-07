@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace DAL.ReadModels
+﻿namespace DAL.DTO
 {
-    public class SkuReadModel
+    public class SkuDto
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public Guid DefaultPriceId { get; set; }
+        public long Id { get; set; }
+        public string Title { get; set; }
+        public long PriceId { get; set; }
     }
 }
