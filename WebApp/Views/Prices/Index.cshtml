@@ -5,36 +5,117 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+@section Scripts
+{
+    <script>
+        var model = {
+            prices: ko.observableArray(),
+            editor: {
+                title: ko.observable(""),
+                value: ko.observable("")
+            },
+            addedCounter: ko.observable(0)
+        };
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Value)
-        </th>
-        <th></th>
-    </tr>
+        function sendAjaxRequest(httpMethod, callback, url, reqData) {
+            $.ajax("/api/pricesweb" + (url ? "/" + url : ""), {
+                type: httpMethod,
+                success: callback,
+                data: reqData
+            });
+        }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Value)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
+        function getAllPrices() {
+            sendAjaxRequest("GET", function (data) {
+                model.prices.removeAll();
+                for (var i = 0; i < data.length; i++) {
+                    model.prices.push(data[i]);
+                }
+            });
+        }
+
+        function removeItem(item) {
+            sendAjaxRequest("DELETE", function () {
+                for (var i = 0; i < model.prices().length; i++) {
+                    if (model.prices()[i].Id == item.Id) {
+                        model.prices.remove(model.prices()[i]);
+                        if (model.addedCounter() > 0) {
+                            var counter = model.addedCounter();
+                            counter--;
+                            model.addedCounter(counter);
+                        }
+                        break;
+                    }
+                }
+            }, item.Id);
+        }
+
+        function handleEditorClick() {
+            sendAjaxRequest("POST", function (newItem) {
+                var storedItem = { Id: newItem.id, Title: newItem.title, Value: newItem.value };
+                model.prices.push(storedItem);
+                var counter = model.addedCounter();
+                counter++;
+                model.addedCounter(counter);
+            }, null, {
+                    Title: model.editor.title,
+                    Value: model.editor.value
+                });
+        }
+
+        $(document).ready(function () {
+            getAllPrices();
+            ko.applyBindings(model);
+        });
+    </script>
 }
-
-</table>
+@section Body
+{
+    <div id="summary" class="section panel panel-default">
+        <div class="panel-heading">
+            Типы цен <span class="badge" data-bind="visible: addedCounter() > 0, text: addedCounter()"></span>
+        </div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Название</th>
+                    <th>Сумма, р.</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: model.prices">
+                <tr>
+                    <td data-bind="text: Id"></td>
+                    <td data-bind="text: Title"></td>
+                    <td data-bind="text: Value"></td>
+                    <td>
+                        <button type="button"
+                                class="btn btn-xs btn-danger"
+                                data-bind="click: removeItem">
+                            Удалить
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="editor" class="section panel panel-default">
+        <div class="panel-heading">
+            Добавить тип цены
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label>Название</label>
+                <input class="form-control" data-bind="value: model.editor.title" />
+            </div>
+            <div class="form-group">
+                <label>Сумма, р.</label>
+                <input class="form-control" data-bind="value: model.editor.value" />
+            </div>
+            <button class="btn btn-primary"
+                    data-bind="click: handleEditorClick">
+                Сохранить
+            </button>
+        </div>
+    </div>
+}
