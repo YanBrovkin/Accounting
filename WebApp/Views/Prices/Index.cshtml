@@ -14,7 +14,8 @@
                 title: ko.observable(""),
                 value: ko.observable("")
             },
-            addedCounter: ko.observable(0)
+            addedCounter: ko.observable(0),
+            displaySummary: ko.observable(true)
         };
 
         function sendAjaxRequest(httpMethod, callback, url, reqData) {
@@ -50,6 +51,10 @@
             }, item.Id);
         }
 
+        function handleCreateClick() {
+            model.displaySummary(false);
+        }
+
         function handleEditorClick() {
             sendAjaxRequest("POST", function (newItem) {
                 var storedItem = { Id: newItem.id, Title: newItem.title, Value: newItem.value };
@@ -57,6 +62,7 @@
                 var counter = model.addedCounter();
                 counter++;
                 model.addedCounter(counter);
+                model.displaySummary(true);
             }, null, {
                     Title: model.editor.title,
                     Value: model.editor.value
@@ -71,35 +77,47 @@
 }
 @section Body
 {
-    <div id="summary" class="section panel panel-default">
+    <div id="summary" class="section panel panel-default" data-bind="if: model.displaySummary">
         <div class="panel-heading">
             Типы цен <span class="badge" data-bind="visible: addedCounter() > 0, text: addedCounter()"></span>
         </div>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Название</th>
-                    <th>Сумма, р.</th>
-                </tr>
-            </thead>
-            <tbody data-bind="foreach: model.prices">
-                <tr>
-                    <td data-bind="text: Id"></td>
-                    <td data-bind="text: Title"></td>
-                    <td data-bind="text: Value"></td>
-                    <td>
-                        <button type="button"
-                                class="btn btn-xs btn-danger"
-                                data-bind="click: removeItem">
-                            Удалить
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="panel-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Название</th>
+                        <th>Сумма, р.</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: model.prices">
+                    <tr>
+                        <td data-bind="text: Id"></td>
+                        <td data-bind="text: Title"></td>
+                        <td data-bind="text: Value"></td>
+                        <td>
+                            <button type="button"
+                                    class="btn btn-xs btn-danger"
+                                    data-bind="click: removeItem">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </button>
+                            <button type="button"
+                                    class="btn btn-xs btn-default">
+                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            </button>
+                        </td>
+                        @*<td>
+                            </td>*@
+                    </tr>
+                </tbody>
+            </table>
+            <button class="btn btn-primary"
+                    data-bind="click: handleCreateClick">
+                Создать
+            </button>
+        </div>
     </div>
-    <div id="editor" class="section panel panel-default">
+    <div id="editor" class="section panel panel-default" data-bind="ifnot: model.displaySummary">
         <div class="panel-heading">
             Добавить тип цены
         </div>
