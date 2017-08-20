@@ -51,6 +51,13 @@
             }, item.Id);
         }
 
+        function editItem(item) {
+            model.displaySummary(false);
+            model.editor.title = item.title;
+            model.editor.value = item.value;
+            handleEditorClick();
+        }
+
         function handleCreateClick() {
             model.displaySummary(false);
         }
@@ -102,12 +109,11 @@
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </button>
                             <button type="button"
-                                    class="btn btn-xs btn-default">
+                                    class="btn btn-xs btn-default"
+                                    dat-bind="click: editItem">
                                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                             </button>
                         </td>
-                        @*<td>
-                            </td>*@
                     </tr>
                 </tbody>
             </table>
