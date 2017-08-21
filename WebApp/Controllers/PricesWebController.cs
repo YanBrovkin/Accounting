@@ -37,7 +37,7 @@ namespace WebApp.Controllers
 
         // PUT: api/Web/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutPriceDto(long id, PriceDto priceDto)
+        public async Task<IHttpActionResult> PutPriceDto([FromUri]long id, [FromBody]PriceDto priceDto)
         {
             if (!ModelState.IsValid)
             {
