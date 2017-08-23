@@ -1,115 +1,23 @@
-﻿@model IEnumerable<DAL.DTO.PriceDto>
-
-@{
+﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @section Scripts
 {
-    <script>
-        var model = {
-            prices: ko.observableArray(),
-            editor: {
-                id: ko.observable(""),
-                title: ko.observable(""),
-                value: ko.observable("")
-            },
-            addedCounter: ko.observable(0),
-            displaySummary: ko.observable(true),
-            displayEdit: ko.observable(false)
-        };
-
-        function sendAjaxRequest(httpMethod, callback, url, reqData) {
-            $.ajax("/api/pricesweb" + (url ? "/" + url : ""), {
-                type: httpMethod,
-                success: callback,
-                data: reqData
-            });
-        }
-
-        function getAllPrices() {
-            sendAjaxRequest("GET", function (data) {
-                model.prices.removeAll();
-                for (var i = 0; i < data.length; i++) {
-                    model.prices.push(data[i]);
-                }
-            });
-        }
-
-        function removeItem(item) {
-            sendAjaxRequest("DELETE", function () {
-                for (var i = 0; i < model.prices().length; i++) {
-                    if (model.prices()[i].Id == item.Id) {
-                        model.prices.remove(model.prices()[i]);
-                        if (model.addedCounter() > 0) {
-                            var counter = model.addedCounter();
-                            counter--;
-                            model.addedCounter(counter);
-                        }
-                        break;
-                    }
-                }
-            }, item.Id);
-        }
-
-        function editItem(item) {
-            model.displaySummary(false);
-            model.displayEdit(true);
-            model.editor.id(item.Id);
-            model.editor.title(item.Title);
-            model.editor.value(item.Value);
-        }
-
-        function handleEditClick(model) {
-            var updatedItem = { Id: model.editor.id(), Title: model.editor.title(), Value: model.editor.value() };
-            sendAjaxRequest("PUT", function () {
-                for (var i = 0; i < model.prices().length; i++) {
-                    var foundItem = model.prices()[i];
-                    if (foundItem.Id == updatedItem.Id) {
-                        foundItem.Title = updatedItem.Title;
-                        foundItem.Value = updatedItem.Value;
-                        break;
-                    }
-                }
-                model.displayEdit(false);
-                model.displaySummary(true);
-            }, model.editor.id(), {
-                    Id: model.editor.id(),
-                    Title: model.editor.title(),
-                    Value: model.editor.value()
-                });
-        }
-
-        function handleCreateClick() {
-            model.displaySummary(false);
-        }
-
-        function handleCreateClick() {
-            sendAjaxRequest("POST", function (newItem) {
-                var storedItem = { Id: newItem.id, Title: newItem.title, Value: newItem.value };
-                model.prices.push(storedItem);
-                var counter = model.addedCounter();
-                counter++;
-                model.addedCounter(counter);
-                model.displaySummary(true);
-            }, null, {
-                    Title: model.editor.title,
-                    Value: model.editor.value
-                });
-        }
-
-        $(document).ready(function () {
-            getAllPrices();
-            ko.applyBindings(model);
-        });
-    </script>
+    <script src="~/Scripts/AccountingClient.js"></script>
 }
+
 @section Body
 {
-    <div id="summary" class="section panel panel-default" data-bind="if: model.displaySummary">
+    @*<div ng-app="AccountingApp" class="row">
+            <div ng-controller="PriceController">
+                {{message}}
+            </div>
+        </div>*@
+    <div ng-app="AccountingApp" ng-controller="PriceController" id="summary" class="section panel panel-default">
         <div class="panel-heading">
-            Типы цен <span class="badge" data-bind="visible: addedCounter() > 0, text: addedCounter()"></span>
+            Типы цен <span class="badge"></span>
         </div>
         <div class="panel-body">
             <table class="table table-hover">
@@ -120,68 +28,26 @@
                         <th>Сумма, р.</th>
                     </tr>
                 </thead>
-                <tbody data-bind="foreach: model.prices">
+                <tbody>
                     <tr>
                         <td data-bind="text: Id"></td>
                         <td data-bind="text: Title"></td>
                         <td data-bind="text: Value"></td>
                         <td>
                             <button type="button"
-                                    class="btn btn-xs btn-danger"
-                                    data-bind="click: removeItem">
+                                    class="btn btn-xs btn-danger">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </button>
                             <button type="button"
-                                    class="btn btn-xs btn-default"
-                                    data-bind="click: editItem">
+                                    class="btn btn-xs btn-default">
                                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                             </button>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <button class="btn btn-primary"
-                    data-bind="click: handleCreateClick">
+            <button class="btn btn-primary">
                 Создать
-            </button>
-        </div>
-    </div>
-    <div id="creator" class="section panel panel-default" data-bind="ifnot: model.displaySummary && model.displayEdit">
-        <div class="panel-heading">
-            Добавить тип цены
-        </div>
-        <div class="panel-body">
-            <div class="form-group">
-                <label data-bind="visible: false, text: model.editor.id"></label>
-                <label>Название</label>
-                <input class="form-control" data-bind="value: model.editor.title" />
-            </div>
-            <div class="form-group">
-                <label>Сумма, р.</label>
-                <input class="form-control" data-bind="value: model.editor.value" />
-            </div>
-            <button class="btn btn-primary"
-                    data-bind="click: handleCreateClick">
-                Создать
-            </button>
-        </div>
-    </div>
-    <div id="editor" class="section panel panel-default" data-bind="visible: model.displayEdit">
-        <div class="panel-heading">
-            Редактировать тип цены
-        </div>
-        <div class="panel-body">
-            <div class="form-group">
-                <label>Название</label>
-                <input class="form-control" data-bind="value: model.editor.title" />
-            </div>
-            <div class="form-group">
-                <label>Сумма, р.</label>
-                <input class="form-control" data-bind="value: model.editor.value" />
-            </div>
-            <button class="btn btn-primary"
-                    data-bind="click: handleEditClick">
-                Изменить
             </button>
         </div>
     </div>
