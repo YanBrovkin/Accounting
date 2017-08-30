@@ -10,16 +10,12 @@
 
 @section Body
 {
-    @*<div ng-app="AccountingApp" class="row">
-            <div ng-controller="PriceController">
-                {{message}}
-            </div>
-        </div>*@
     <div ng-app="AccountingApp" id="summary" class="section panel panel-default">
         <div class="panel-heading">
             Типы цен <span class="badge"></span>
         </div>
         <div class="panel-body">
+            <input type="text" placeholder="Search price by name" ng-model="searchPrice" />
             <table class="table table-hover" ng-controller="PricesController as customer">
                 <thead>
                     <tr>
@@ -29,7 +25,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="p in customer.prices">
+                    <tr ng-repeat="p in customer.prices | filter : searchPrice">
                         <td>{{p.Id}}</td>
                         <td>{{p.Title}}</td>
                         <td>{{p.Value}}</td>
