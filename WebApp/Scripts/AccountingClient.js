@@ -1,4 +1,4 @@
-﻿var AccountingApp = angular.module('AccountingApp', [])
+﻿var AccountingApp = angular.module('AccountingApp', []);
 AccountingApp.controller('PricesController', function ($scope, PricesService) {
     var vm = this;
     vm.prices = [];
@@ -7,14 +7,14 @@ AccountingApp.controller('PricesController', function ($scope, PricesService) {
 
     function getAllPrices() {
         PricesService.getAllPrices()
-            .then(function (response) {
+            .then(
+            function (response) {
                 vm.prices = response.data;
-                console.log($scope.prices);
+                console.log(vm.prices);
+            },
+            function (reason) {
+                console.log('Failed: ' + reason);
             });
-        //.error(function (error) {
-        //    $scope.status = 'Unable to load customer data: ' + error.message;
-        //    console.log($scope.status);
-        //});
     }
 });
 
