@@ -15,12 +15,12 @@
                 {{message}}
             </div>
         </div>*@
-    <div ng-app="AccountingApp" ng-controller="PriceController" id="summary" class="section panel panel-default">
+    <div ng-app="AccountingApp" id="summary" class="section panel panel-default">
         <div class="panel-heading">
             Типы цен <span class="badge"></span>
         </div>
         <div class="panel-body">
-            <table class="table table-hover">
+            <table class="table table-hover" ng-controller="PricesController as customer">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -29,10 +29,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td data-bind="text: Id"></td>
-                        <td data-bind="text: Title"></td>
-                        <td data-bind="text: Value"></td>
+                    <tr ng-repeat="p in customer.prices">
+                        <td>{{p.Id}}</td>
+                        <td>{{p.Title}}</td>
+                        <td>{{p.Value}}</td>
                         <td>
                             <button type="button"
                                     class="btn btn-xs btn-danger">
